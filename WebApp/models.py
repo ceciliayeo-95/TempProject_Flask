@@ -1,18 +1,9 @@
 from WebApp import db
 
-
-class Car(db.Model):
-    id = db.Column(db.INTEGER, primary_key=True)
-    carName = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.FLOAT, default=0)
-
-    def __repr__(self):
-        return f"Car('{self.id}', '{self.carName}','{self.price}')"
-
-
 class Customer(db.Model):
     id = db.Column(db.INTEGER, primary_key=True)
     customerName = db.Column(db.String(100))
+    customerAge = db.Column(db.INTEGER)
     customerDOB = db.Column(db.String(50))
     serviceOfficerName = db.Column(db.String(50))
     NRIC = db.Column(db.String(20))
