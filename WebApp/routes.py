@@ -27,6 +27,7 @@ def login():
         else:
             token = res.content
             flash(f'Login Successful!', 'success')
+            return redirect(url_for('home'))
 
     return render_template('login.html', title='Login', form=form)
 
@@ -76,7 +77,8 @@ def CreateCustomer():
         db.session.add(customer)
         db.session.commit()
         flash(f'Customer: {customerName} has been sucessfully registered!!', 'success')
-        #return redirect(url_for('home'))
+        return redirect(url_for('home'))
+
     return render_template('createUser.html', form=form)
 
 @app.route("/customer/<int:id>/delete", methods=['POST'])
