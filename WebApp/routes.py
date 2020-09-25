@@ -46,8 +46,8 @@ def login():
     if form.validate_on_submit():
         res = requests.post('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', json={'username': form.username.data, 'password': form.password.data})
         print(res.status_code)
-        print(res.json())
-
+        print(res)
+        flash(f'{res.content}', 'success')
         # user = User.query.filter_by(email=form.email.data).first()
         # if user and bcrypt.check_password_hash(user.password, form.password.data):
         #     login_user(user, remember=form.remember.data)
