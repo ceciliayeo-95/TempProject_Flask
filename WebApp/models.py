@@ -12,6 +12,7 @@ class Customer(db.Model):
     productType = db.Column(db.String(100))
 
 
+
 # customerName: string maxlen(64) a-zA-Z
 #
 #     customerAge: integer (> 18)
