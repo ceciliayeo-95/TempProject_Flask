@@ -33,10 +33,10 @@ def token_required(f):
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'Hello World! Cecilia'
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
 
     # if current_user.is_authenticated:
@@ -44,8 +44,9 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        res = requests.get('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', data={'username': form.username.data, 'password': form.password.data})
-        print(res)
+        res = requests.post('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', json={'username': form.username.data, 'password': form.password.data})
+        print(res.status_code)
+        print(res.json())
 
         # user = User.query.filter_by(email=form.email.data).first()
         # if user and bcrypt.check_password_hash(user.password, form.password.data):
@@ -66,6 +67,23 @@ def home():
 def protected(username):
     return jsonify({'message': 'This is protected', 'username':username})
 
+@app.route('/cars',methods=['GET'])
+def listCars():
+    return ''
+
+@app.route('/cars/<id>',methods=['GET'])
+def listCar():
+    return ''
+
+@app.route('/cars',methods=['POST'])
+def createCar():
+    carName = request.args.get('carName')
+    price = request.args.get('price')
+    return jsonify({'carName': carName, 'price': price})
+
+@app.route('/cars/<id>',methods=['DELETE'])
+def deleteCar():
+    return ''
 
 @app.route('/apiData',methods=['GET'])
 def getAPI_test():
@@ -78,6 +96,22 @@ def getAPI_test():
     data = r.json()
     print(data['api_info'])
     return data
+
+
+@app.route('/createcars',methods=['GET','POST'])
+def CreateCar():
+    cars = Car.query.all()
+    form = CarForm()
+
+    if form.validate_on_submit():
+        carName = form.carName.data
+        price = form.price.data
+        car = Car(carName=carName, price=price)
+        db.session.add(car)
+        db.session.commit()
+        flash(f'Car Created!!', 'success')
+        return redirect(url_for('home'))
+    return render_template('createcar.html', form=form, cars=cars)
 
 @app.route('/onboardcustomer',methods=['GET','POST'])
 def CreateCustomer():
@@ -115,24 +149,44 @@ def delete_customer(id):
     flash('Customer has been deleted!', 'success')
     return redirect(url_for('home'))
 
+@app.route('/selectcars',methods=['GET','POST'])
+def selectCar():
+    #----------------------------------------------#
+    gender = ['M','F']
+    gender_choice = []
+    #Unpack to tuple
+    for i in range(len(gender)):
+        gender_choice.append((gender[i],gender[i]))
+    #----------------------------------------------#
+    form = selectForm()
+    form.gender.choices = gender_choice
 
-# @app.route('/login2')
-# def login2():
-#     auth = request.authorization
-#
-#     if not auth or not auth.username or not auth.password:
-#         return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-#
-#     # user = User.query.filter_by(name=auth.username).first()
-#     #
-#     # if not user:
-#     #     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-#
-#     #if check_password_hash(user.password, auth.password):
-#     token = jwt.encode(
-#         {'username': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-#         app.config['SECRET_KEY'])
-#
-#     return jsonify({'token': token.decode('UTF-8')})
-#
-#     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+    if form.validate_on_submit():
+        car = form.opts.data
+        carName = car.carName
+        gender = form.gender.data
+
+        flash(f'Car: {carName} selected, {gender}!', 'success')
+
+    return render_template('selectcar.html', form=form)
+
+@app.route('/login2')
+def login2():
+    auth = request.authorization
+
+    if not auth or not auth.username or not auth.password:
+        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+
+    # user = User.query.filter_by(name=auth.username).first()
+    #
+    # if not user:
+    #     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+
+    #if check_password_hash(user.password, auth.password):
+    token = jwt.encode(
+        {'username': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
+        app.config['SECRET_KEY'])
+
+    return jsonify({'token': token.decode('UTF-8')})
+
+    return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
