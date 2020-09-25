@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Home</h1>
+
+    {% for car in cars %}
+        <div>
+            <p>Car Name: {{ car.carName }}, Price: {{ car.price }}</p>
+        </div>
+    {% endfor %}
+
+{%  endblock content %}

@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Create New Customer</legend>
+
+                <div class="form-group">
+                    {{ form.customerName.label(class="form-control-label") }}
+                    {% if form.customerName.errors %}
+                        {{ form.customerName(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.customerName.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.customerName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.customerDOB.label(class="form-control-label") }}
+                    {% if form.customerDOB.errors %}
+                        {{ form.customerDOB(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.customerDOB.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.customerDOB(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.serviceOfficerName.label(class="form-control-label") }}
+                    {% if form.serviceOfficerName.errors %}
+                        {{ form.serviceOfficerName(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.serviceOfficerName.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.serviceOfficerName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.NRIC.label(class="form-control-label") }}
+                    {% if form.NRIC.errors %}
+                        {{ form.NRIC(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.NRIC.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.NRIC(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.branchCode.label(class="form-control-label") }}
+                    {% if form.branchCode.errors %}
+                        {{ form.branchCode(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.branchCode.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.branchCode(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.productType.label(class="form-control-label") }}
+                    {% if form.productType.errors %}
+                        {{ form.productType(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.productType.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.productType(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+
+
+            </fieldset>
+
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+
+{%  endblock content %}
