@@ -58,8 +58,8 @@ def login():
 
 @app.route('/home',methods=['GET'])
 def home():
-    cars = Car.query.all()
-    return render_template('home.html', cars=cars)
+    customers = Customer.query.all()
+    return render_template('home.html', customers=customers)
 
 @app.route('/protected')
 @token_required
@@ -137,6 +137,16 @@ def CreateCustomer():
         flash(f'Customer: {customerName} has been sucessfully registered!!', 'success')
         #return redirect(url_for('home'))
     return render_template('createUser.html', form=form)
+
+@app.route("/customer/<int:id>/delete", methods=['POST'])
+def delete_customer(id):
+
+    customer = Customer.query.get_or_404(id)
+
+    db.session.delete(customer)
+    db.session.commit()
+    flash('Customer has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 @app.route('/selectcars',methods=['GET','POST'])
 def selectCar():
