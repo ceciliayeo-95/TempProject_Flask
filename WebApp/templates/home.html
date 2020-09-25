@@ -2,10 +2,48 @@
 {% block content %}
     <h1>Home</h1>
 
-    {% for car in cars %}
-        <div>
-            <p>Car Name: {{ car.carName }}, Price: {{ car.price }}</p>
+    {% for customer in customers %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <div>
+                        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal"
+                                        data-target="#deleteModal">Delete
+                                </button>
+                    </div>
+                </div>
+
+                <h2><p class="article-title">{{ customer.customerName }}</p></h2>
+
+
+
+                <p class="article-content font-italic">{{ customer.customerDOB }}</p>
+                <p class="article-content font-italic">{{ customer.serviceOfficerName }}</p>
+
+            </div>
+        </article>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Delete Customer?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{{ url_for('delete_customer', id=customer.id) }}" method="POST">
+                            <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+
     {% endfor %}
 
 {%  endblock content %}

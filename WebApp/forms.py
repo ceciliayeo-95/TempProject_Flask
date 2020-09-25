@@ -5,7 +5,6 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from WebApp.models import *
 from WebApp import db
 
-
 class CarForm(FlaskForm):
     carName = StringField('Car Name', validators=[DataRequired()])
     price = FloatField('Price', validators=[DataRequired()])
@@ -25,6 +24,12 @@ class CustomerForm(FlaskForm):
     serviceOfficerName = StringField('Service Officer Name', validators=[DataRequired()])
     NRIC = StringField('NRIC', validators=[DataRequired()])
     branchCode = IntegerField('Branch Code', validators=[DataRequired()])
-    productType = StringField('Product Type', validators=[DataRequired()])
+    productType = SelectField('Product Type', choices=[])
 
     submit = SubmitField('Onboard Customer')
+
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
