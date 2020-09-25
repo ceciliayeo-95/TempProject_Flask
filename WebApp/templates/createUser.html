@@ -21,6 +21,20 @@
                 </div>
 
                 <div class="form-group">
+                    {{ form.customerAge.label(class="form-control-label") }}
+                    {% if form.customerAge.errors %}
+                        {{ form.customerAge(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.customerAge.errors %}
+                                <span>{{ error }}</span>
+                            {%  endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.customerAge(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
                     {{ form.customerDOB.label(class="form-control-label") }}
                     {% if form.customerDOB.errors %}
                         {{ form.customerDOB(class="form-control form-control-lg is-invalid") }}
@@ -76,20 +90,33 @@
                     {% endif %}
                 </div>
 
-                <div class="form-group">
-                    {{ form.productType.label(class="form-control-label") }}
-                    {% if form.productType.errors %}
-                        {{ form.productType(class="form-control form-control-lg is-invalid") }}
+{#                <div class="form-group">#}
+{#                    {{ form.productType.label(class="form-control-label") }}#}
+{#                    {% if form.productType.errors %}#}
+{#                        {{ form.productType(class="form-control form-control-lg is-invalid") }}#}
+{#                        <div class="invalid-feedback">#}
+{#                            {% for error in form.productType.errors %}#}
+{#                                <span>{{ error }}</span>#}
+{#                            {%  endfor %}#}
+{#                        </div>#}
+{#                    {% else %}#}
+{#                        {{ form.productType(class="form-control form-control-lg") }}#}
+{#                    {% endif %}#}
+{#                </div>#}
+
+                <div class="form-group" style="height:250px;">
+                    {{ form.productType2.label(class="form-control-label") }}
+                    {% if form.productType2.errors %}
+                        {{ form.productType2(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.productType.errors %}
+                            {% for error in form.productType2.errors %}
                                 <span>{{ error }}</span>
                             {%  endfor %}
                         </div>
                     {% else %}
-                        {{ form.productType(class="form-control form-control-lg") }}
+                        {{ form.productType2(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-
 
 
             </fieldset>
