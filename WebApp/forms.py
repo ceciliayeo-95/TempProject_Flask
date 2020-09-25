@@ -25,6 +25,6 @@ class CustomerForm(FlaskForm):
     serviceOfficerName = StringField('Service Officer Name', validators=[DataRequired()])
     NRIC = StringField('NRIC', validators=[DataRequired()])
     branchCode = IntegerField('Branch Code', validators=[DataRequired()])
-    productType = IntegerField('Product Type', validators=[DataRequired()])
+    productType = StringField('Product Type', validators=[DataRequired()])
 
     submit = SubmitField('Onboard Customer')

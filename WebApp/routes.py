@@ -93,7 +93,11 @@ def CreateCar():
 
 @app.route('/onboardcustomer',methods=['GET','POST'])
 def CreateCustomer():
-    gender = ['M', 'F']
+    productTypeList = ['00 - investor', '01 - insurance', '02 - loans', '03 - savings' , '04 - credit card']
+    productType_choice = []
+    # Unpack to tuple
+    for i in range(len(productTypeList)):
+        productType_choice.append((productTypeList[i], productTypeList[i]))
 
     form = CustomerForm()
 
