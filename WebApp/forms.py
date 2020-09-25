@@ -5,7 +5,6 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from WebApp.models import *
 from WebApp import db
 
-
 class CarForm(FlaskForm):
     carName = StringField('Car Name', validators=[DataRequired()])
     price = FloatField('Price', validators=[DataRequired()])

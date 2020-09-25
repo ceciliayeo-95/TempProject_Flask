@@ -35,14 +35,18 @@ def token_required(f):
 def hello_world():
     return 'Hello World! Cecilia'
 
-@app.route('/login',methods=['GET','POST'])
+
+@app.route('/login', methods=['GET','POST'])
 def login():
+
     # if current_user.is_authenticated:
     #     return redirect(url_for('home'))
 
     form = LoginForm()
     if form.validate_on_submit():
-        pass
+        res = requests.get('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', json={'username': form.username, 'password': form.password})
+        print(res.status_code)
+
         # user = User.query.filter_by(email=form.email.data).first()
         # if user and bcrypt.check_password_hash(user.password, form.password.data):
         #     login_user(user, remember=form.remember.data)
