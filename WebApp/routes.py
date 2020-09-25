@@ -8,6 +8,7 @@ import json
 import datetime
 from functools import wraps
 
+token = ''
 
 def token_required(f):
     @wraps(f)
@@ -39,15 +40,13 @@ def hello_world():
 @app.route('/login', methods=['GET','POST'])
 def login():
 
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
 
     form = LoginForm()
     if form.validate_on_submit():
         res = requests.post('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', json={'username': form.username.data, 'password': form.password.data})
-        print(res.status_code)
-        print(res)
-        flash(f'{res.content}', 'success')
+
+        token = res.content
+        flash(f'Login Successful!', 'success')
         # user = User.query.filter_by(email=form.email.data).first()
         # if user and bcrypt.check_password_hash(user.password, form.password.data):
         #     login_user(user, remember=form.remember.data)
@@ -170,23 +169,3 @@ def selectCar():
 
     return render_template('selectcar.html', form=form)
 
-@app.route('/login2')
-def login2():
-    auth = request.authorization
-
-    if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-
-    # user = User.query.filter_by(name=auth.username).first()
-    #
-    # if not user:
-    #     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-
-    #if check_password_hash(user.password, auth.password):
-    token = jwt.encode(
-        {'username': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-        app.config['SECRET_KEY'])
-
-    return jsonify({'token': token.decode('UTF-8')})
-
-    return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
