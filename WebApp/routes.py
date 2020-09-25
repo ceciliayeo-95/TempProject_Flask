@@ -10,50 +10,24 @@ from functools import wraps
 
 token = ''
 
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
-
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-
-        if not token:
-            return jsonify({'message' : 'Token is missing!'}), 401
-
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            username = data['username']
-            #current_user = User.query.filter_by(public_id=data['public_id']).first()
-        except:
-            return jsonify({'message' : 'Token is invalid!'}), 401
-
-        return f(username, *args, **kwargs)
-
-    return decorated
-
 @app.route('/')
 def hello_world():
-    return 'Hello World! Cecilia'
+    return token
 
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-
+    global token
 
     form = LoginForm()
     if form.validate_on_submit():
         res = requests.post('http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login', json={'username': form.username.data, 'password': form.password.data})
+        if res.status_code != 200:
+            flash('Login unsuccessful. Please check username and password', 'danger')
+        else:
+            token = res.content
+            flash(f'Login Successful!', 'success')
 
-        token = res.content
-        flash(f'Login Successful!', 'success')
-        # user = User.query.filter_by(email=form.email.data).first()
-        # if user and bcrypt.check_password_hash(user.password, form.password.data):
-        #     login_user(user, remember=form.remember.data)
-        #     next_page = request.args.get('next')
-        #     return redirect(next_page) if next_page else redirect(url_for('home'))
-        # else:
-        #     flash('Login unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/home',methods=['GET'])
@@ -61,28 +35,6 @@ def home():
     customers = Customer.query.all()
     return render_template('home.html', customers=customers)
 
-@app.route('/protected')
-@token_required
-def protected(username):
-    return jsonify({'message': 'This is protected', 'username':username})
-
-@app.route('/cars',methods=['GET'])
-def listCars():
-    return ''
-
-@app.route('/cars/<id>',methods=['GET'])
-def listCar():
-    return ''
-
-@app.route('/cars',methods=['POST'])
-def createCar():
-    carName = request.args.get('carName')
-    price = request.args.get('price')
-    return jsonify({'carName': carName, 'price': price})
-
-@app.route('/cars/<id>',methods=['DELETE'])
-def deleteCar():
-    return ''
 
 @app.route('/apiData',methods=['GET'])
 def getAPI_test():
@@ -97,41 +49,30 @@ def getAPI_test():
     return data
 
 
-@app.route('/createcars',methods=['GET','POST'])
-def CreateCar():
-    cars = Car.query.all()
-    form = CarForm()
-
-    if form.validate_on_submit():
-        carName = form.carName.data
-        price = form.price.data
-        car = Car(carName=carName, price=price)
-        db.session.add(car)
-        db.session.commit()
-        flash(f'Car Created!!', 'success')
-        return redirect(url_for('home'))
-    return render_template('createcar.html', form=form, cars=cars)
-
 @app.route('/onboardcustomer',methods=['GET','POST'])
 def CreateCustomer():
-    productTypeList = ['00 - investor', '01 - insurance', '02 - loans', '03 - savings' , '04 - credit card']
+    productTypeList = ['137 : Investor', '070 : Insurance', '291 : Loans', '969 : Savings' , '555 : Credit Cards']
     productType_choice = []
     # Unpack to tuple
     for i in range(len(productTypeList)):
         productType_choice.append((productTypeList[i], productTypeList[i]))
 
     form = CustomerForm()
-    form.productType.choices = productType_choice
+    #form.productType.choices = productType_choice
+    form.productType2.choices = productType_choice
 
     if form.validate_on_submit():
         customerName = form.customerName.data
+        customerAge = form.customerAge.data
         customerDOB = form.customerDOB.data
         serviceOfficerName = form.serviceOfficerName.data
         NRIC = form.NRIC.data
         branchCode = form.branchCode.data
-        productType = form.productType.data
+        productType = ','.join(form.productType2.data)
 
-        customer = Customer(customerName=customerName, customerDOB=customerDOB, serviceOfficerName=serviceOfficerName,NRIC=NRIC,branchCode=branchCode,productType=productType)
+        print(productType)
+
+        customer = Customer(customerName=customerName, customerAge=customerAge,customerDOB=customerDOB, serviceOfficerName=serviceOfficerName,NRIC=NRIC,branchCode=branchCode,productType=productType)
         db.session.add(customer)
         db.session.commit()
         flash(f'Customer: {customerName} has been sucessfully registered!!', 'success')
@@ -148,24 +89,4 @@ def delete_customer(id):
     flash('Customer has been deleted!', 'success')
     return redirect(url_for('home'))
 
-@app.route('/selectcars',methods=['GET','POST'])
-def selectCar():
-    #----------------------------------------------#
-    gender = ['M','F']
-    gender_choice = []
-    #Unpack to tuple
-    for i in range(len(gender)):
-        gender_choice.append((gender[i],gender[i]))
-    #----------------------------------------------#
-    form = selectForm()
-    form.gender.choices = gender_choice
-
-    if form.validate_on_submit():
-        car = form.opts.data
-        carName = car.carName
-        gender = form.gender.data
-
-        flash(f'Car: {carName} selected, {gender}!', 'success')
-
-    return render_template('selectcar.html', form=form)
 
